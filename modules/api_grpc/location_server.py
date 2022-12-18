@@ -21,7 +21,7 @@ class LocationServicer(location_pb2_grpc.LocationServiceServicer):
         kafka_client.close()
 
     def Create(self, request, context):
-        print("Received a message!")
+        # print("Received a message!")
 
         request_value = {
             "person_id": request.person_id,
