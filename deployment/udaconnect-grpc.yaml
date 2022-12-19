@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: udaconnect-grpc
+  name: udaconnect-grpc
+spec:
+  ports:
+  - name: "5005"
+    port: 5005
+    targetPort: 5005
+    nodePort: 30005
+  selector:
+    service: udaconnect-grpc
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: udaconnect-grpc
+  name: udaconnect-grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: udaconnect-grpc
+  template:
+    metadata:
+      labels:
+        service: udaconnect-grpc
+    spec:
+      containers:
+      - image: neuroit/udaconnect-grpc:latest
+        name: udaconnect-grpc
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "64m"
+          limits:
+            memory: "256Mi"
+            cpu: "256m"
+      restartPolicy: Always

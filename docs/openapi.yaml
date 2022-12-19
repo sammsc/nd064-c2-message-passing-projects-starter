@@ -1,0 +1,198 @@
+---
+openapi: 3.0.1
+info:
+  title: UdaConnect API
+  description: REST API for the UdaConnect APP
+  version: "0.1"
+servers:
+- url: http://localhost:30001
+paths:
+  /api/persons:
+    get:
+      description: Retrieve all persons in the database
+      responses:
+        "200":
+          description: Successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                "0":
+                  value: |
+                    [{"first_name": "Taco", "company_name": "Alpha Omega Upholstery", "id": 5, "last_name": "Fargo"}, {"first_name": "Frank", "company_name": "USDA", "id": 6, "last_name": "Shader"}, {"first_name": "Pam", "company_name": "Hampton, Hampton and McQuill", "id": 1, "last_name": "Trexler"}, {"first_name": "Paul", "company_name": "Paul Badman & Associates", "id": 8, "last_name": "Badman"}, {"first_name": "Otto", "company_name": "The Chicken Sisters Restaurant", "id": 9, "last_name": "Spring"}]
+        "404":
+          description: Request unsuccessful
+      servers:
+      - url: http://localhost:30001
+    post:
+      description: Add person to database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_persons_body'
+            examples:
+              "0":
+                value: |-
+                  {
+                      "company_name": "3rd co.",
+                      "last_name": "Doe",
+                      "first_name": "John"
+                  }
+      responses:
+        "200":
+          description: Successfully added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              examples:
+                "0":
+                  value: |
+                    {"first_name": "John", "company_name": "3rd co.", "id": 11, "last_name": "Doe"}
+        "404":
+          description: Request unsuccessful
+      servers:
+      - url: http://localhost:30001
+    servers:
+    - url: http://localhost:30001
+  /api/persons/{userId}/connection:
+    get:
+      description: Retrieve connections to the person
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "9"
+      - name: end_date
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 2020-12-30
+      - name: distance
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: "1"
+      - name: start_date
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 2020-01-01
+      responses:
+        "200":
+          description: Successfully retrieved connections
+        "404":
+          description: Request unsuccessful
+      servers:
+      - url: http://localhost:30001
+    servers:
+    - url: http://localhost:30001
+  /api/persons/{userId}:
+    get:
+      description: Retrieve a person
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "9"
+      responses:
+        "200":
+          description: Successfully retrieved person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              examples:
+                "0":
+                  value: |
+                    {"first_name": "Otto", "company_name": "The Chicken Sisters Restaurant", "id": 9, "last_name": "Spring"}
+        "404":
+          description: Request unsuccessful
+      servers:
+      - url: http://localhost:30001
+    servers:
+    - url: http://localhost:30001
+  /api/locations/{id}:
+    get:
+      description: Retrieve location info from location ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "29"
+      responses:
+        "200":
+          description: Successfully retrieved location info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+              examples:
+                "0":
+                  value: |
+                    {"person_id": 1, "id": 40, "creation_time": "2020-07-07T10:37:06", "latitude": "-122.290883", "longitude": "37.55363"}
+        "404":
+          description: Request unsuccessful
+      servers:
+      - url: http://localhost:30001
+    servers:
+    - url: http://localhost:30001
+components:
+  schemas:
+    api_persons_body:
+      type: object
+      properties:
+        company_name:
+          type: string
+        last_name:
+          type: string
+        first_name:
+          type: string
+    inline_response_200:
+      type: object
+      properties:
+        company_name:
+          type: string
+        last_name:
+          type: string
+        id:
+          type: integer
+        first_name:
+          type: string
+    inline_response_200_1:
+      type: object
+      properties:
+        creation_time:
+          type: string
+        latitude:
+          type: string
+        id:
+          type: integer
+        person_id:
+          type: integer
+        longitude:
+          type: string

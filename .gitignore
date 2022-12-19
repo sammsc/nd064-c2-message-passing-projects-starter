@@ -123,3 +123,6 @@ app/app-test.db
 
 .vagrant
 .ds_store
+
+docker_img/
+.dockerignore

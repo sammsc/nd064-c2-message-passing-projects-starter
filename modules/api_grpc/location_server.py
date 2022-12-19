@@ -8,9 +8,11 @@ from kafka import KafkaProducer, KafkaConsumer
 from kafka.admin import KafkaAdminClient, NewTopic
 import pickle
 
+
 class LocationServicer(location_pb2_grpc.LocationServiceServicer):
     def __init__(self):
-        kafka_server = 'localhost:9092'
+        # kafka_server = 'localhost:9092'
+        kafka_server = 'kafka-service:9092'
         self.kafka_topic = 'locations'
         self.producer = KafkaProducer(bootstrap_servers=kafka_server)
         kafka_client = KafkaConsumer(bootstrap_servers=kafka_server)
@@ -20,16 +22,17 @@ class LocationServicer(location_pb2_grpc.LocationServiceServicer):
             kafka_admin.close()
         kafka_client.close()
 
+
     def Create(self, request, context):
         # print("Received a message!")
 
-        request_value = {
-            "person_id": request.person_id,
-            "longitude": request.longitude,
-            "latitude": request.latitude,
-            "creation_time": request.creation_time
-        }
-        print(request_value)
+        # request_value = {
+        #     "person_id": request.person_id,
+        #     "longitude": request.longitude,
+        #     "latitude": request.latitude,
+        #     "creation_time": request.creation_time
+        # }
+        # print(request_value)
 
         self.producer.send(self.kafka_topic, value=pickle.dumps(request))
         self.producer.flush()

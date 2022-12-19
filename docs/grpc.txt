@@ -1,0 +1,29 @@
+﻿For sample request see the file “modules/api_grpc/location_client.py”
+
+gRPC server endpoint:
+	localhost:30005
+
+
+message format:
+
+location_pb2.LocationMessage(
+        person_id = 2,
+        longitude = 118.2437,
+        latitude = 34.0522,
+        creation_time=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.000000")
+    )
+
+
+sample request:
+
+channel = grpc.insecure_channel("localhost:30005")
+stub = location_pb2_grpc.LocationServiceStub(channel)
+
+cur_position = location_pb2.LocationMessage(
+        person_id = 2,
+        longitude = 118.2437,
+        latitude = 34.0522,
+        creation_time=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.000000")
+    )
+
+response = stub.Create(cur_position)
